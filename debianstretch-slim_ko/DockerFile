@@ -1,0 +1,8 @@
+FROM debian:stretch-slim
+
+RUN apt-get update && apt-get install -y locales
+RUN sed -i 's/^# \(ko_KR.UTF-8\)/\1/' /etc/locale.gen
+RUN localedef -f UTF-8 -i ko_KR ko_KR.UTF-8
+ENV LANG ko_KR.UTF-8
+ENV LANGUAGE ko_KR.UTF-8
+RUN update-locale LANG=ko_KR.UTF-8
