@@ -1,0 +1,58 @@
+[docker-mysql + heidi 설치]
+1. Download image
+docker pull mysql:5.7
+
+2. Container run : -p(port)/-e(environment variable)
+docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=javapass -d mysql:5.7 --character-set-server=utf8 --collation-server=utf8_unicode_ci
+
+3. Check the container status
+docker ps -a
+
+4. Bash shell
+docker exec -i -t mysql bash
+**echo '한글출력확인' : bash shell에서 설정한 한글 출력여부 확인.
+
+5. Configuration - encoding (bash)
+  1) update 정보 받아오기
+    apt-get update
+  
+  2) locale package 설치
+    apt-get install locales
+
+  3) 적용되어 있는 로케일 확인
+    locale
+
+  4) 사용가능한 로케일 확인
+    locale -a
+
+  5) 로케일 정의
+    localedef -f UTF-8 -i ko_KR ko_KR.UTF-8
+
+  6) locale 적용
+    export LC_ALL=ko_KR.UTF-8
+
+  7) mysql실행
+    mysql -u root -p
+
+  8) 아래의 test id와 table을 생성하여 동작과 출력확인.
+----------------------------------------------------------------------------
+[sql 사용자 계정생성]
+create user 'javauser'@'localhost' identified by 'javapass'
+grant all privileges on *.* to 'javauser'@'localhost'
+grant all privileges on *.* to 'javauser'@'%' identified by 'javapass'
+flush privileges;
+
++heidisql로 접속하여 sql파일 실행 -> database 자료 가져오기
+
+[test data]---------------------------------------------------------------
+create table address_book (
+no int(4) unsigned not null auto_increment,
+name varchar(10) not null,
+tel varchar(14),
+nickname varchar(20),
+primary key(no)
+);
+
+insert into address_book (no, name, tel, nickname)
+values ('0001','김이박','000-0000-0000','별명');
+----------------------------------------------------------------------------
